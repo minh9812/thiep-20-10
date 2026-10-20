@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Mẹ Yêu Dấu - Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts hỗ trợ đầy đủ Tiếng Việt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: {
+                            50: '#FFFDF9',
+                            100: '#FDF7ED',
+                            200: '#F9EBD9',
+                        },
+                        blush: {
+                            50: '#FFF5F7',
+                            100: '#FFE4E9',
+                            200: '#FFC9D5',
+                            300: '#FF9EB5',
+                            400: '#F47292',
+                            500: '#E14D74',
+                            600: '#C8325B',
+                            700: '#A32146',
+                        },
+                        gold: {
+                            100: '#FEF5D8',
+                            300: '#F3D078',
+                            400: '#E5B84B',
+                            500: '#C9972C',
+                            600: '#A37419',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Be Vietnam Pro"', 'sans-serif'],
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        script: ['"Dancing Script"', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Nền trang nhã và hiệu ứng cuộn mượt */
+        body {
+            background: linear-gradient(160deg, #FFFDF9 0%, #FFF5F7 45%, #FDF3E7 100%);
+            color: #4A353B;
+            overflow-x: hidden;
+        }
+
+        /* Canvas cánh hoa rơi cố định toàn màn hình */
+        #petals-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 30;
+        }
+
+        /* Phong bì thư 3D tương tác */
+        .envelope-wrapper {
+            perspective: 1200px;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            max-width: 540px;
+            height: 340px;
+            background: linear-gradient(145deg, #F9E0E6, #F3C6D1);
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(163, 33, 70, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+            margin: 0 auto;
+            cursor: pointer;
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s ease;
+        }
+
+        .envelope:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 30px 60px -12px rgba(163, 33, 70, 0.3);
+        }
+
+        /* Nắp phong bì */
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 190px;
+            background: linear-gradient(180deg, #F6CED8 0%, #EAA8B8 100%);
+            clip-path: polygon(0 0, 50% 100%, 100% 0);
+            transform-origin: top center;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.3s;
+            z-index: 25;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            filter: drop-shadow(0 6px 10px rgba(163, 33, 70, 0.15));
+        }
+
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 5;
+        }
+
+        /* Mặt trước phong bì */
+        .envelope-pocket {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FDECEF 0%, #F7D4DD 50%, #F2BFCF 100%);
+            clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
+            z-index: 20;
+            border-radius: 16px;
+            box-shadow: inset 0 -10px 25px rgba(201, 151, 44, 0.12);
+        }
+
+        /* Viền vàng ánh kim trên phong bì */
+        .envelope-border-gold {
+            position: absolute;
+            inset: 10px;
+            border: 1.5px dashed rgba(201, 151, 44, 0.45);
+            border-radius: 12px;
+            z-index: 21;
+            pointer-events: none;
+        }
+
+        /* Con dấu sáp vàng hồng */
+        .wax-seal {
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 74px;
+            height: 74px;
+            border-radius: 9999px;
+            background: radial-gradient(circle at 30% 30%, #F5D77F, #D49B2A 65%, #9B6B15 100%);
+            box-shadow: 0 8px 20px rgba(155, 107, 21, 0.45), inset 0 2px 6px rgba(255, 255, 255, 0.65), inset 0 -3px 8px rgba(100, 60, 5, 0.5);
+            z-index: 28;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+            border: 2px solid rgba(255, 245, 214, 0.6);
+        }
+
+        .envelope:hover .wax-seal {
+            transform: translate(-50%, -50%) scale(1.08);
+        }
+
+        .envelope.open .wax-seal {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.4);
+            pointer-events: none;
+        }
+
+        /* Tờ thư bên trong phong bì */
+        .letter-preview {
+            position: absolute;
+            left: 6%;
+            right: 6%;
+            bottom: 16px;
+            height: 290px;
+            background: #FFFDF9;
+            border-radius: 12px;
+            z-index: 12;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: transform 0.85s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid #F3E5AB;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .envelope.open .letter-preview {
+            transform: translateY(-95px);
+        }
+
+        /* Hiệu ứng giấy viết thư cổ điển */
+        .paper-texture {
+            background-color: #FFFDF9;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(255, 228, 233, 0.45) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(254, 245, 216, 0.6) 0px, transparent 50%),
+                repeating-linear-gradient(transparent, transparent 35px, rgba(225, 77, 116, 0.08) 35px, rgba(225, 77, 116, 0.08) 36px);
+            box-shadow: 0 25px 60px -15px rgba(163, 33, 70, 0.18), 0 0 0 1px rgba(229, 184, 75, 0.35);
+        }
+
+        /* Hiệu ứng bông hoa tương tác */
+        .flower-node {
+            cursor: pointer;
+            transform-origin: center;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
+        }
+        .flower-node:hover {
+            transform: scale(1.13) rotate(4deg);
+            filter: drop-shadow(0 8px 16px rgba(225, 77, 116, 0.45));
+        }
+        .flower-node.bloomed {
+            filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.65));
+        }
+
+        /* Hiệu ứng lơ lửng nhẹ nhàng */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+        .animate-float {
+            animation: floatSlow 5s ease-in-out infinite;
+        }
+
+        /* Hiệu ứng đung đưa và tỏa sáng cho đóa hoa hồng tặng Mẹ */
+        @keyframes swayRose {
+            0%, 100% { transform: translateY(0px) rotate(-3deg) scale(1); }
+            50% { transform: translateY(-7px) rotate(3deg) scale(1.03); }
+        }
+        .rose-sway {
+            animation: swayRose 4.2s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+        .rose-glow {
+            filter: drop-shadow(0 10px 22px rgba(225, 77, 116, 0.38)) drop-shadow(0 0 12px rgba(245, 215, 127, 0.45));
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
+        }
+        .rose-interactive:hover .rose-glow {
+            filter: drop-shadow(0 14px 28px rgba(225, 77, 116, 0.58)) drop-shadow(0 0 18px rgba(245, 215, 127, 0.75));
+            transform: scale(1.08);
+        }
+        .rose-interactive:active .rose-glow {
+            transform: scale(0.95);
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(225, 77, 116, 0.4); }
+            50% { box-shadow: 0 0 0 14px rgba(225, 77, 116, 0); }
+        }
+        .pulse-glow {
+            animation: pulseGlow 2.4s infinite;
+        }
+
+        /* Hiệu ứng trái tim bay lên */
+        @keyframes floatUpHeart {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(0.7) rotate(0deg);
+            }
+            50% {
+                opacity: 0.9;
+                transform: translateY(-90px) scale(1.15) rotate(-10deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-180px) scale(0.9) rotate(12deg);
+            }
+        }
+        .floating-heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 60;
+            animation: floatUpHeart 2.2s ease-out forwards;
+        }
+
+        /* Khung ảnh Polaroid */
+        .polaroid-card {
+            background: #FFFFFF;
+            padding: 14px 14px 28px 14px;
+            box-shadow: 0 15px 35px -10px rgba(100, 50, 65, 0.15), 0 0 0 1px rgba(243, 208, 120, 0.3);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .polaroid-card:hover {
+            transform: translateY(-8px) rotate(0deg) scale(1.02) !important;
+            box-shadow: 0 24px 45px -12px rgba(163, 33, 70, 0.25);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-blush-200 selection:text-blush-700">
+
+    <!-- Canvas Cánh Hoa Rơi -->
+    <canvas id="petals-canvas"></canvas>
+
+    <!-- Thanh Điều Hướng Nổi -->
+    <header class="fixed top-0 left-0 right-0 z-40 px-4 py-3">
+        <div class="max-w-6xl mx-auto bg-white/80 backdrop-blur-md border border-blush-200/70 rounded-full px-4 sm:px-6 py-2.5 shadow-lg shadow-blush-500/5 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-2.5 group">
+                <span class="w-9 h-9 rounded-full bg-gradient-to-br from-blush-400 to-blush-600 text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition">
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </span>
+                <div>
+                    <span class="font-script text-xl sm:text-2xl text-blush-600 font-bold tracking-wide block leading-none">Thương Mẹ 20/10</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-stone-700">
+                <a href="#letter-section" class="hover:text-blush-600 transition">Bức Thư Gửi Mẹ</a>
+            </nav>
+
+            <div class="flex items-center gap-2 sm:gap-3">
+                <a href="#letter-section" class="flex items-center gap-1.5 px-4 py-2 rounded-full bg-gradient-to-r from-blush-500 to-blush-600 hover:from-blush-600 hover:to-blush-700 text-white text-xs sm:text-sm font-medium shadow-md shadow-blush-500/20 transition transform hover:scale-105">
+                    <span>💌</span>
+                    <span>Mở Thư Gửi Mẹ</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- PHẦN 1: HERO BANNER ẤM ÁP -->
+    <section id="hero" class="relative pt-28 pb-16 sm:pt-36 sm:pb-24 px-4 overflow-hidden">
+        <!-- Họa tiết ánh sáng trang trí -->
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blush-100/90 border border-blush-200 text-blush-700 text-xs sm:text-sm font-medium mb-6 shadow-sm">
+                <span>🌸</span>
+                <span>Kỷ niệm Ngày Phụ Nữ Việt Nam 20 tháng 10</span>
+                <span>✨</span>
+            </div>
+
+            <h1 class="font-serif text-4xl sm:text-6xl md:text-7xl font-bold text-stone-800 leading-tight mb-4">
+                Gửi Ngàn Yêu Thương Đến <br>
+                <span id="hero-mom-name" class="font-script text-5xl sm:text-7xl md:text-8xl bg-gradient-to-r from-blush-600 via-blush-500 to-gold-600 bg-clip-text text-transparent inline-block py-2">
+                    Mẹ Yêu Quý Của Con
+                </span>
+            </h1>
+
+            <p id="hero-subtitle" class="max-w-2xl mx-auto text-base sm:text-lg text-stone-600 leading-relaxed mb-10 font-normal">
+                "Đi khắp thế gian không ai tốt bằng Mẹ, gánh nặng cuộc đời không ai khổ bằng Cha." Nhân ngày 20/10, con gửi đến Mẹ tấm thiệp nhỏ gói trọn lòng biết ơn và tình yêu thương vô bờ bến.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8">
+                <a href="#letter-section" class="px-7 py-3.5 rounded-full bg-gradient-to-r from-blush-500 to-blush-600 text-white font-semibold shadow-xl shadow-blush-500/25 hover:shadow-blush-500/40 transition transform hover:-translate-y-0.5 flex items-center gap-2.5 text-base">
+                    <span>💌</span>
+                    <span>Mở Phong Bì Thư Của Mẹ</span>
+                </a>
+
+                <!-- Đóa Hoa Hồng Nghệ Thuật Tặng Mẹ -->
+                <button type="button" onclick="bloomHeroRose(event)" class="rose-interactive group relative flex flex-col items-center focus:outline-none" title="Chạm vào đóa hoa hồng để gửi ngàn yêu thương đến Mẹ">
+                    <!-- Hào quang ấm áp phía sau đóa hồng -->
+                    <div class="absolute -inset-3 rounded-full bg-gradient-to-tr from-blush-300/35 via-gold-300/35 to-rose-200/40 blur-xl opacity-85 group-hover:opacity-100 group-hover:scale-110 transition duration-500 pointer-events-none"></div>
+
+                    <!-- SVG Đóa Hoa Hồng Nhung Nhiều Lớp Cánh & Nơ Vàng Kim -->
+                    <div class="rose-sway relative z-10">
+                        <svg id="hero-rose-svg" class="w-24 h-28 sm:w-28 sm:h-32 rose-glow" viewBox="0 0 140 165" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <radialGradient id="roseOuterPetal" cx="50%" cy="35%" r="65%">
+                                    <stop offset="0%" stop-color="#FF7597"/>
+                                    <stop offset="55%" stop-color="#E11D48"/>
+                                    <stop offset="100%" stop-color="#9F1239"/>
+                                </radialGradient>
+                                <radialGradient id="roseMidPetal" cx="48%" cy="30%" r="65%">
+                                    <stop offset="0%" stop-color="#FF9EB5"/>
+                                    <stop offset="50%" stop-color="#F43F5E"/>
+                                    <stop offset="100%" stop-color="#BE123C"/>
+                                </radialGradient>
+                                <radialGradient id="roseInnerCore" cx="50%" cy="40%" r="60%">
+                                    <stop offset="0%" stop-color="#FFE4E9"/>
+                                    <stop offset="40%" stop-color="#FB7185"/>
+                                    <stop offset="100%" stop-color="#9F1239"/>
+                                </radialGradient>
+                                <linearGradient id="stemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#4D7C0F"/>
+                                    <stop offset="100%" stop-color="#15803D"/>
+                                </linearGradient>
+                                <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#65A30D"/>
+                                    <stop offset="60%" stop-color="#16A34A"/>
+                                    <stop offset="100%" stop-color="#14532D"/>
+                                </linearGradient>
+                                <linearGradient id="goldRibbon" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#FEF08A"/>
+                                    <stop offset="50%" stop-color="#EAB308"/>
+                                    <stop offset="100%" stop-color="#A16207"/>
+                                </linearGradient>
+                            </defs>
+
+                            <!-- Hạt lấp lánh quanh hoa -->
+                            <circle cx="24" cy="30" r="2.2" fill="#FACC15" opacity="0.85"/>
+                            <circle cx="116" cy="26" r="2" fill="#FDA4AF" opacity="0.9"/>
+                            <circle cx="118" cy="68" r="2.5" fill="#FACC15" opacity="0.75"/>
+                            <circle cx="20" cy="66" r="1.8" fill="#F43F5E" opacity="0.7"/>
+
+                            <!-- Cành hoa -->
+                            <path d="M70 78 C69 105, 67 132, 71 156" stroke="url(#stemGrad)" stroke-width="5.5" stroke-linecap="round"/>
+
+                            <!-- Lá bên trái -->
+                            <path d="M68 106 C44 102, 26 88, 22 75 C36 74, 56 84, 68 102 Z" fill="url(#leafGrad)"/>
+                            <path d="M67 103 C50 94, 36 84, 26 77" stroke="#BEF264" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+
+                            <!-- Lá bên phải -->
+                            <path d="M70 116 C94 112, 112 98, 118 84 C103 83, 82 94, 70 112 Z" fill="url(#leafGrad)"/>
+                            <path d="M71 113 C88 104, 102 94, 113 86" stroke="#BEF264" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+
+                            <!-- Đài hoa xanh -->
+                            <path d="M52 74 C58 84, 82 84, 88 74 C94 68, 99 58, 92 66 C82 74, 58 74, 48 66 C41 58, 46 68, 52 74 Z" fill="url(#leafGrad)"/>
+
+                            <!-- Lớp cánh hoa hồng ngoài cùng -->
+                            <path d="M70 14 C42 14, 24 36, 32 58 C38 73, 55 80, 70 80 C85 80, 102 73, 108 58 C116 36, 98 14, 70 14 Z" fill="url(#roseOuterPetal)"/>
+                            <path d="M28 44 C22 26, 44 12, 65 20 C48 28, 36 44, 42 64 C32 60, 29 52, 28 44 Z" fill="url(#roseMidPetal)" opacity="0.92"/>
+                            <path d="M112 44 C118 26, 96 12, 75 20 C92 28, 104 44, 98 64 C108 60, 111 52, 112 44 Z" fill="url(#roseMidPetal)" opacity="0.92"/>
+
+                            <!-- Lớp cánh hoa hồng tầng giữa -->
+                            <path d="M36 52 C36 30, 54 20, 70 22 C86 20, 104 30, 104 52 C104 69, 88 78, 70 78 C52 78, 36 69, 36 52 Z" fill="url(#roseMidPetal)"/>
+                            <path d="M42 46 C46 28, 66 24, 82 30 C96 36, 98 56, 84 68 C70 76, 48 70, 42 54 Z" fill="url(#roseOuterPetal)" opacity="0.88"/>
+
+                            <!-- Lớp cánh cuộn tâm hoa hồng -->
+                            <path d="M48 45 C48 31, 60 25, 72 27 C85 29, 93 40, 89 53 C85 65, 71 70, 58 65 C49 61, 47 52, 48 45 Z" fill="url(#roseInnerCore)"/>
+                            <path d="M56 44 C57 35, 66 31, 74 34 C82 37, 84 46, 78 53 C72 59, 61 57, 57 50 Z" fill="url(#roseOuterPetal)"/>
+                            <path d="M62 44 C64 39, 71 38, 75 42 C78 46, 74 52, 68 51 C63 50, 61 47, 62 44 Z" fill="#FFE4E9" opacity="0.9"/>
+
+                            <!-- Đường viền ánh sáng dịu trên cánh hoa -->
+                            <path d="M46 34 C56 24, 84 24, 94 34" stroke="#FFE4E9" stroke-width="1.3" stroke-linecap="round" opacity="0.55"/>
+                            <path d="M42 56 C55 72, 85 72, 98 56" stroke="#FFE4E9" stroke-width="1.2" stroke-linecap="round" opacity="0.45"/>
+
+                            <!-- Nơ ruy băng vàng kim thắt trên cành hoa -->
+                            <path d="M68 124 C52 114, 42 124, 52 134 C58 139, 65 132, 69 127 Z" fill="url(#goldRibbon)"/>
+                            <path d="M72 124 C88 114, 98 124, 88 134 C82 139, 75 132, 71 127 Z" fill="url(#goldRibbon)"/>
+                            <path d="M67 128 C62 140, 55 148, 50 153" stroke="url(#goldRibbon)" stroke-width="3.2" stroke-linecap="round"/>
+                            <path d="M73 128 C78 140, 85 148, 90 153" stroke="url(#goldRibbon)" stroke-width="3.2" stroke-linecap="round"/>
+                            <circle cx="70" cy="126" r="4.2" fill="#FEF08A" stroke="#A16207" stroke-width="1.2"/>
+                        </svg>
+                    </div>
+
+                    <!-- Nhãn tinh tế dưới đóa hoa -->
+                    <span class="relative z-10 -mt-1 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/90 border border-blush-200 text-blush-700 text-xs font-semibold shadow-sm group-hover:bg-blush-50 group-hover:border-blush-300 transition">
+                        <span>🌹</span>
+                        <span id="hero-rose-caption">Đóa hồng tặng Mẹ</span>
+                    </span>
+                </button>
+            </div>
+
+            <!-- Chỉ số yêu thương nhanh -->
+            <div class="mt-14 grid grid-cols-3 max-w-lg mx-auto gap-3 sm:gap-6 bg-white/75 backdrop-blur-sm p-4 rounded-2xl border border-blush-100 shadow-sm">
+                <div class="text-center">
+                    <div class="font-serif text-2xl sm:text-3xl font-bold text-blush-600">365</div>
+                    <div class="text-xs text-stone-500">Ngày Mẹ tần tảo</div>
+                </div>
+                <div class="text-center border-x border-blush-100">
+                    <div class="font-serif text-2xl sm:text-3xl font-bold text-gold-600">∞</div>
+                    <div class="text-xs text-stone-500">Tình Mẹ bao la</div>
+                </div>
+                <div class="text-center">
+                    <div class="font-serif text-2xl sm:text-3xl font-bold text-blush-600">20/10</div>
+                    <div class="text-xs text-stone-500">Ngày tôn vinh Mẹ</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PHẦN 2: PHONG BÌ THƯ MỞ RA LỜI CHÚC CẢM ĐỘNG -->
+    <section id="letter-section" class="py-16 sm:py-24 px-4 relative z-20">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-xs font-semibold uppercase tracking-widest text-gold-600 bg-gold-100 px-3.5 py-1 rounded-full">Lá Thư Tâm Tình</span>
+                <p class="text-stone-600 mt-2 text-sm sm:text-base">Chạm vào con dấu sáp vàng trên phong bì để mở bức thư con viết riêng tặng Mẹ nhé!</p>
+            </div>
+
+            <!-- Khu vực Phong Bì Tương Tác -->
+            <div class="envelope-wrapper pt-12 pb-6">
+                <div id="interactive-envelope" class="envelope" onclick="toggleEnvelope()">
+                    <!-- Nắp trên -->
+                    <div class="envelope-flap"></div>
+
+                    <!-- Bản xem trước bức thư nhô lên -->
+                    <div class="letter-preview">
+                        <span class="text-xs uppercase tracking-widest text-gold-600 font-semibold mb-1">Ngày Phụ Nữ Việt Nam 20/10</span>
+                        <h3 id="preview-mom-title" class="font-script text-3xl text-blush-600 font-bold mb-2">Kính gửi Mẹ yêu quý của con,</h3>
+                        <p class="text-xs sm:text-sm text-stone-600 line-clamp-2 italic max-w-xs">
+                            "Chúc mừng ngày 20/10 người phụ nữ xinh đẹp và tuyệt vời nhất trong lòng con!..."
+                        </p>
+                        <span class="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-blush-600 bg-blush-50 px-3 py-1.5 rounded-full border border-blush-200">
+                            <span>✨ Đang mở thư...</span>
+                        </span>
+                    </div>
+
+                    <!-- Thân phong bì -->
+                    <div class="envelope-pocket"></div>
+                    <div class="envelope-border-gold"></div>
+
+                    <!-- Nhãn người nhận trên phong bì -->
+                    <div class="absolute bottom-6 left-0 right-0 text-center z-25 pointer-events-none px-4">
+                        <p class="text-xs uppercase tracking-widest text-stone-500">Người nhận đặc biệt</p>
+                        <p id="envelope-recipient-label" class="font-script text-2xl sm:text-3xl text-blush-700 font-bold mt-0.5">Mẹ Yêu Quý Của Con</p>
+                    </div>
+
+                    <!-- Con dấu sáp -->
+                    <div class="wax-seal pulse-glow">
+                        <span class="font-serif font-bold text-xs text-amber-950 tracking-tighter leading-none">20/10</span>
+                        <span class="text-lg leading-none my-0.5">❤️</span>
+                        <span class="text-[9px] font-semibold uppercase text-amber-950 tracking-wider">Mở thư</span>
+                    </div>
+                </div>
+
+                <!-- Nút điều khiển dưới phong bì -->
+                <div class="text-center mt-6">
+                    <button id="envelope-action-btn" onclick="toggleEnvelope()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white border border-blush-300 text-blush-600 text-sm font-medium shadow-sm hover:bg-blush-50 transition">
+                        <span>💌</span>
+                        <span id="envelope-btn-text">Nhấn để mở phong bì</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Toàn văn bức thư cảm động (Hiện ra mượt mà khi mở phong bì) -->
+            <div id="full-letter-card" class="hidden mt-8 transition-all duration-700 opacity-0 translate-y-6">
+                <div class="paper-texture rounded-3xl p-6 sm:p-12 md:p-16 relative overflow-hidden">
+                    <!-- Góc trang trí hoa văn vàng -->
+                    <div class="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-gold-400/60 rounded-tl-xl pointer-events-none"></div>
+                    <div class="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-gold-400/60 rounded-tr-xl pointer-events-none"></div>
+                    <div class="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-gold-400/60 rounded-bl-xl pointer-events-none"></div>
+                    <div class="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-gold-400/60 rounded-br-xl pointer-events-none"></div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-blush-200/70 pb-4 mb-6">
+                        <div class="flex items-center gap-2 text-blush-600">
+                            <span class="text-2xl">🌷</span>
+                            <span class="font-serif italic text-lg text-stone-600">Ngày 20 tháng 10 — Ngày của Mẹ yêu</span>
+                        </div>
+                        <button onclick="replayTypewriter()" class="self-start sm:self-auto text-xs text-blush-600 hover:text-blush-700 bg-blush-50 hover:bg-blush-100 px-3 py-1.5 rounded-full border border-blush-200 transition flex items-center gap-1">
+                            <span>✨</span>
+                            <span>Hiệu ứng viết từng chữ</span>
+                        </button>
+                    </div>
+
+                    <!-- Tiêu đề thư -->
+                    <h3 id="letter-salutation" class="font-script text-3xl sm:text-4xl text-blush-700 font-bold mb-6">
+                        Mẹ yêu quý của con,
+                    </h3>
+
+                    <!-- Nội dung thư -->
+                    <div id="letter-body-content" class="text-stone-700 text-base sm:text-lg leading-9 space-y-4 font-normal whitespace-pre-line"></div>
+
+                    <!-- Chữ ký người gửi -->
+                    <div class="mt-10 pt-4 flex flex-col items-end text-right">
+                        <p class="text-sm text-stone-500 italic mb-1">Luôn yêu và biết ơn Mẹ thật nhiều,</p>
+                        <p id="letter-signature" class="font-script text-3xl sm:text-4xl text-blush-600 font-bold">
+                            Con của Mẹ ❤️
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CHÂN TRANG -->
+    <footer class="py-12 px-4 text-center border-t border-blush-100 bg-white/40 relative z-20">
+        <div class="max-w-3xl mx-auto">
+            <p class="font-script text-3xl sm:text-4xl text-blush-600 font-bold mb-2">
+                Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10
+            </p>
+            <p class="text-xs sm:text-sm text-stone-500">
+                Tấm thiệp nhỏ được làm bằng cả trái tim dành tặng người phụ nữ tuyệt vời nhất cuộc đời con.
+            </p>
+        </div>
+    </footer>
+
+    <!-- THÔNG BÁO TOAST NHẸ NHÀNG (Không dùng alert) -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-4 transition-all duration-300">
+        <div class="bg-stone-900/90 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-xl border border-blush-400/40 flex items-center gap-2.5 text-sm">
+            <span id="toast-icon">🌸</span>
+            <span id="toast-message">Gửi ngàn yêu thương đến Mẹ!</span>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================
+           1. NỘI DUNG LỜI CHÚC CHÍNH 20/10 TẶNG MẸ
+           ========================================== */
+        const MAIN_WISH_CONTENT = `Chúc mừng ngày 20/10 người phụ nữ xinh đẹp và tuyệt vời nhất trong lòng con!
+
+Với thế giới, Mẹ có thể chỉ là một người bình thường, nhưng với con, Mẹ là cả bầu trời ấm áp. Ngày hôm nay và cả 364 ngày còn lại trong năm, con chúc Mẹ luôn trẻ trung, rạng rỡ, chẳng còn những lo toan vất vả.
+
+Cảm ơn cuộc đời đã cho con được làm con của Mẹ!`;
+
+        // Trạng thái ứng dụng
+        let cardState = {
+            wishContent: MAIN_WISH_CONTENT,
+            isEnvelopeOpen: false
+        };
+
+        let typewriterTimer = null;
+
+        /* ==========================================
+           2. HIỆU ỨNG CÁNH HOA RƠI & ĐÓA HỒNG TẶNG MẸ
+           ========================================== */
+        const canvas = document.getElementById('petals-canvas');
+        const ctx = canvas.getContext('2d');
+        let petals = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function createPetal(x = null, y = null, isBurst = false) {
+            const colors = ['#FFC9D5', '#FF9EB5', '#F47292', '#FDE68A', '#FECDD3'];
+            return {
+                x: x !== null ? x : Math.random() * canvas.width,
+                y: y !== null ? y : Math.random() * canvas.height - canvas.height,
+                size: Math.random() * 8 + 6,
+                speedY: isBurst ? (Math.random() * 2.5 + 1.2) : (Math.random() * 1.2 + 0.6),
+                speedX: isBurst ? (Math.random() - 0.5) * 4 : (Math.random() - 0.5) * 1.2,
+                angle: Math.random() * Math.PI * 2,
+                spin: (Math.random() - 0.5) * 0.03,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                opacity: Math.random() * 0.45 + 0.45
+            };
+        }
+
+        function initPetals() {
+            resizeCanvas();
+            petals = [];
+            const count = window.innerWidth < 640 ? 22 : 38;
+            for (let i = 0; i < count; i++) {
+                const p = createPetal();
+                p.y = Math.random() * canvas.height;
+                petals.push(p);
+            }
+        }
+
+        function animatePetals() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < petals.length; i++) {
+                const p = petals[i];
+                p.y += p.speedY;
+                p.x += p.speedX + Math.sin(p.y * 0.012) * 0.4;
+                p.angle += p.spin;
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.angle);
+                ctx.globalAlpha = p.opacity;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.bezierCurveTo(p.size / 2, -p.size / 2, p.size, p.size / 3, 0, p.size);
+                ctx.bezierCurveTo(-p.size, p.size / 3, -p.size / 2, -p.size / 2, 0, 0);
+                ctx.fill();
+                ctx.restore();
+
+                if (p.y > canvas.height + 20) {
+                    petals[i] = createPetal(Math.random() * canvas.width, -15);
+                }
+            }
+            requestAnimationFrame(animatePetals);
+        }
+
+        function spawnFloatingHearts(originX, originY, count = 6) {
+            const symbols = ['❤️', '🌹', '💖', '🌸', '✨'];
+            for (let i = 0; i < count; i++) {
+                const el = document.createElement('div');
+                el.className = 'floating-heart text-xl sm:text-2xl';
+                el.textContent = symbols[i % symbols.length];
+                el.style.left = `${originX + (Math.random() - 0.5) * 90}px`;
+                el.style.top = `${originY + (Math.random() - 0.5) * 30}px`;
+                document.body.appendChild(el);
+                setTimeout(() => el.remove(), 2200);
+            }
+        }
+
+        function bloomHeroRose(event) {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 12; i++) {
+                petals.push(createPetal(centerX, centerY, true));
+            }
+            if (petals.length > 75) {
+                petals.splice(0, 12);
+            }
+
+            spawnFloatingHearts(centerX, centerY, 7);
+            showToast("🌹 Gửi tặng Mẹ đóa hoa hồng tươi thắm nhất!", "🌹");
+        }
+
+        /* ==========================================
+           3. ĐÓNG / MỞ PHONG BÌ THƯ & HIỆU ỨNG VIẾT CHỮ
+           ========================================== */
+        function toggleEnvelope() {
+            const envelope = document.getElementById('interactive-envelope');
+            const fullLetter = document.getElementById('full-letter-card');
+            const btnText = document.getElementById('envelope-btn-text');
+
+            cardState.isEnvelopeOpen = !cardState.isEnvelopeOpen;
+
+            if (cardState.isEnvelopeOpen) {
+                envelope.classList.add('open');
+                btnText.textContent = "Nhấn để gấp phong bì lại";
+                fullLetter.classList.remove('hidden');
+
+                setTimeout(() => {
+                    fullLetter.classList.remove('opacity-0', 'translate-y-6');
+                    startTypewriterEffect(cardState.wishContent);
+                    fullLetter.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 380);
+            } else {
+                envelope.classList.remove('open');
+                btnText.textContent = "Nhấn để mở phong bì";
+                fullLetter.classList.add('opacity-0', 'translate-y-6');
+                setTimeout(() => {
+                    fullLetter.classList.add('hidden');
+                }, 400);
+            }
+        }
+
+        function startTypewriterEffect(text) {
+            const container = document.getElementById('letter-body-content');
+            if (typewriterTimer) clearInterval(typewriterTimer);
+            container.textContent = "";
+            let idx = 0;
+            typewriterTimer = setInterval(() => {
+                if (idx < text.length) {
+                    container.textContent += text.charAt(idx);
+                    idx++;
+                } else {
+                    clearInterval(typewriterTimer);
+                }
+            }, 16);
+        }
+
+        function replayTypewriter() {
+            startTypewriterEffect(cardState.wishContent);
+            showToast("✨ Đang viết lại từng dòng thư gửi Mẹ...");
+        }
+
+        /* ==========================================
+           4. HIỂN THỊ THÔNG BÁO TOAST
+           ========================================== */
+        let toastTimeout = null;
+        function showToast(message, icon = "🌸") {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-message').textContent = message;
+            document.getElementById('toast-icon').textContent = icon;
+
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 3200);
+        }
+
+        // Khởi tạo khi trang tải xong
+        window.onload = function() {
+            initPetals();
+            animatePetals();
+            document.getElementById('letter-body-content').textContent = cardState.wishContent;
+        };
+    </script>
+</body>
+</html>
